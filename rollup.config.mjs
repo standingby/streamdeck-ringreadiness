@@ -6,7 +6,7 @@ import path from "node:path";
 import url from "node:url";
 
 const isWatching = !!process.env.ROLLUP_WATCH;
-const sdPlugin = "com.rotte.oura.sdPlugin";
+const sdPlugin = "kz.standingby.ringreadiness.sdPlugin";
 
 /** @type {import("rollup").RollupOptions} */
 export default {

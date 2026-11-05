@@ -1,4 +1,4 @@
-import { mkdtempSync } from "node:fs";
+import { existsSync, mkdtempSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
@@ -86,6 +86,19 @@ describe("DataStore", () => {
 		expect(await store.refresh()).toBe(false);
 		expect(store.state.dailyError).toBe("limit");
 		expect(store.state.days["2026-11-05"]?.sleep).toBe(91);
+	});
+
+	it("clearData wipes memory and the cache file", async () => {
+		const file = cacheFile();
+		const client = { daily: async () => syntheticBundle() } as unknown as OuraClient;
+		const store = new DataStore(client, file, now);
+		await store.init();
+		store.dispose();
+		await store.refresh();
+		expect(existsSync(file)).toBe(true);
+		await store.clearData();
+		expect(store.state.days).toEqual({});
+		expect(existsSync(file)).toBe(false);
 	});
 
 	it("shares one in-flight daily fetch between callers", async () => {

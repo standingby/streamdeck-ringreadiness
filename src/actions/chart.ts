@@ -10,7 +10,7 @@ export type ChartSettings = { metric?: MetricId; stepGoal?: number };
 
 const metricOf = (s: ChartSettings): MetricId => (isMetric(s.metric) && s.metric !== "hr" ? s.metric : "readiness");
 
-@action({ UUID: "com.rotte.oura.chart" })
+@action({ UUID: "kz.standingby.ringreadiness.chart" })
 export class ChartAction extends OuraAction<ChartSettings> {
 	protected needsHr(): boolean {
 		return false;

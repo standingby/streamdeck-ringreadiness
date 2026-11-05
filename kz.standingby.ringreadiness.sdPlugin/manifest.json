@@ -1,12 +1,13 @@
 {
 	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
-	"Name": "Oura",
+	"Name": "Ring Readiness",
 	"Version": "0.1.0.0",
-	"Author": "rotte",
-	"Description": "Oura Ring readiness, sleep, activity, stress, HRV and heart rate on your Stream Deck.",
-	"UUID": "com.rotte.oura",
+	"Author": "standingby",
+	"Description": "Readiness, sleep, activity, stress, HRV and heart rate from your Oura Ring on Stream Deck keys and Stream Deck+ dials. Not affiliated with or endorsed by Oura.",
+	"URL": "https://github.com/standingby/ringreadiness",
+	"UUID": "kz.standingby.ringreadiness",
 	"Icon": "imgs/plugin/icon",
-	"Category": "Oura",
+	"Category": "Ring Readiness",
 	"CategoryIcon": "imgs/plugin/category",
 	"CodePath": "bin/plugin.js",
 	"SDKVersion": 2,
@@ -17,20 +18,15 @@
 		{
 			"Platform": "windows",
 			"MinimumVersion": "10"
-		},
-		{
-			"Platform": "mac",
-			"MinimumVersion": "12"
 		}
 	],
 	"Nodejs": {
-		"Version": "20",
-		"Debug": "enabled"
+		"Version": "20"
 	},
 	"Actions": [
 		{
-			"Name": "Oura Metric",
-			"UUID": "com.rotte.oura.metric",
+			"Name": "Ring Metric",
+			"UUID": "kz.standingby.ringreadiness.metric",
 			"Icon": "imgs/actions/metric",
 			"Tooltip": "One Oura metric. Press: next metric. Hold: refresh. Dial: rotate to browse days.",
 			"PropertyInspectorPath": "ui/metric.html",
@@ -54,8 +50,8 @@
 			]
 		},
 		{
-			"Name": "Trend chart",
-			"UUID": "com.rotte.oura.chart",
+			"Name": "Trend Chart",
+			"UUID": "kz.standingby.ringreadiness.chart",
 			"Icon": "imgs/actions/chart",
 			"Tooltip": "7 or 30 day chart of an Oura metric. Press: next metric. Hold: refresh.",
 			"PropertyInspectorPath": "ui/chart.html",
@@ -79,8 +75,8 @@
 			]
 		},
 		{
-			"Name": "Day summary",
-			"UUID": "com.rotte.oura.summary",
+			"Name": "Day Summary",
+			"UUID": "kz.standingby.ringreadiness.summary",
 			"Icon": "imgs/actions/summary",
 			"Tooltip": "Readiness, Sleep and Activity at a glance. Press: today and refresh.",
 			"PropertyInspectorPath": "ui/summary.html",

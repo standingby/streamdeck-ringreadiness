@@ -4,10 +4,16 @@ import { DataStore } from "./data/store";
 import { AuthStore, REDIRECT_URI, TokenProvider } from "./oura/auth";
 import { OuraClient } from "./oura/client";
 import { waitForCode } from "./oura/login";
+import { migrateLegacyDataDir } from "./util/files";
 
 const log = streamDeck.logger.createScope("oura");
 
-export const auth = new AuthStore();
+/** One-time copy of files from the pre-release data folder; everything reads after it. */
+export const dataReady = migrateLegacyDataDir()
+	.then((copied) => copied && log.info("migrated data from the legacy folder"))
+	.catch((err) => log.warn(`legacy data migration failed: ${String(err)}`));
+
+export const auth = new AuthStore(undefined, dataReady);
 export const tokens = new TokenProvider(auth);
 export const client = new OuraClient(tokens);
 export const store = new DataStore(client, undefined, Date.now, (m) => log.warn(m));
@@ -17,7 +23,6 @@ export type PiMessage =
 	| { type: "status" }
 	| { type: "connect"; clientId?: string; clientSecret?: string }
 	| { type: "disconnect" }
-	| { type: "savePat"; pat?: string }
 	| { type: "refresh" };
 
 let loginInFlight = false;
@@ -29,7 +34,6 @@ async function pushStatus(extra: Record<string, string> = {}): Promise<void> {
 		method: s.method,
 		clientId: s.clientId,
 		hasClientSecret: s.hasClientSecret,
-		hasPat: s.hasPat,
 		redirectUri: REDIRECT_URI,
 		loginInFlight,
 		...extra,
@@ -83,16 +87,11 @@ export async function handlePiMessage(msg: PiMessage): Promise<void> {
 			void startLogin(msg.clientId, msg.clientSecret);
 			return;
 		case "disconnect":
+			// Oura requires user data to be deletable on request: drop tokens and every cached value.
 			await auth.update({ accessToken: undefined, refreshToken: undefined, expiresAt: undefined });
-			store.resetSchedule();
+			await store.clearData();
 			onAuthChanged();
-			await pushStatus({ message: "OAuth tokens removed." });
-			return;
-		case "savePat":
-			await auth.update({ pat: msg.pat?.trim() || undefined });
-			store.resetSchedule();
-			onAuthChanged();
-			await pushStatus({ message: msg.pat?.trim() ? "Token saved." : "Token removed." });
+			await pushStatus({ message: "Disconnected. Tokens and cached data deleted." });
 			return;
 		case "refresh":
 			await store.refresh();

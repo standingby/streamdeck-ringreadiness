@@ -1,4 +1,5 @@
 import type { FetchFn, TokenProvider } from "./auth";
+import { USER_AGENT } from "../version";
 import { OuraError } from "./errors";
 
 const BASE_URL = "https://api.ouraring.com/v2/usercollection";
@@ -110,7 +111,7 @@ export class OuraClient {
 			let res: Response;
 			try {
 				res = await this.fetchFn(url, {
-					headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+					headers: { Authorization: `Bearer ${token}`, Accept: "application/json", "User-Agent": USER_AGENT },
 					signal: AbortSignal.timeout(this.timeoutMs),
 				});
 			} catch (err) {

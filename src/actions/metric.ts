@@ -10,7 +10,7 @@ export type MetricActionSettings = { metric?: MetricId; stepGoal?: number };
 
 const metricOf = (s: MetricActionSettings): MetricId => (isMetric(s.metric) ? s.metric : "readiness");
 
-@action({ UUID: "com.rotte.oura.metric" })
+@action({ UUID: "kz.standingby.ringreadiness.metric" })
 export class MetricAction extends OuraAction<MetricActionSettings> {
 	protected needsHr(s: MetricActionSettings): boolean {
 		return metricOf(s) === "hr";

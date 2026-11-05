@@ -44,6 +44,14 @@ describe("renderers", () => {
 		expect(svg).toContain(">2m<");
 	});
 
+	it("never puts the Oura mark into an image", () => {
+		const v = (m: "readiness" | "sleep" | "activity" | "steps") => metricView(state, m, TODAY, TODAY, NOW);
+		const s = { readiness: v("readiness"), sleep: v("sleep"), activity: v("activity"), steps: v("steps"), dayText: "Today" };
+		for (const svg of [renderSummaryKey(s), renderSummaryStrip(s), renderConnect(144, 144), renderConnect(200, 100)]) {
+			expect(svg.toLowerCase()).not.toContain("oura");
+		}
+	});
+
 	it("shows the error badge", () => {
 		const v = metricView({ ...state, dailyError: "reauth" }, "sleep", TODAY, TODAY, NOW);
 		expect(renderMetricKey(v)).toContain(">REAUTH<");
@@ -64,6 +72,6 @@ describe("renderers", () => {
 	it("encodes as a base64 data URI", () => {
 		const uri = toDataUri(renderConnect(200, 100));
 		expect(uri.startsWith("data:image/svg+xml;base64,")).toBe(true);
-		expect(Buffer.from(uri.split(",")[1]!, "base64").toString("utf8")).toContain("Connect Oura");
+		expect(Buffer.from(uri.split(",")[1]!, "base64").toString("utf8")).toContain("Connect");
 	});
 });

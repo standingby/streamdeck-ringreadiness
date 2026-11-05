@@ -1,3 +1,4 @@
+import { rm } from "node:fs/promises";
 import path from "node:path";
 
 import type { OuraClient } from "../oura/client";
@@ -123,6 +124,15 @@ export class DataStore {
 		this.state = { ...this.state, dailyError: undefined, hrError: undefined };
 		this.emit();
 		void this.tick();
+	}
+
+	/** Forget all health data, in memory and on disk (Disconnect). */
+	async clearData(): Promise<void> {
+		await Promise.allSettled([this.dailyInFlight, this.hrInFlight]);
+		this.sched = {};
+		this.state = { days: {} };
+		await rm(this.cacheFile, { force: true });
+		this.emit();
 	}
 
 	private fetchDaily(kind: "full" | "recent"): Promise<boolean> {

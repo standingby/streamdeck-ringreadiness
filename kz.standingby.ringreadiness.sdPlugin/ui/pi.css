@@ -14,3 +14,5 @@ h3 { margin: 14px 0 4px; font-size: 11px; letter-spacing: .06em; text-transform:
 details summary { cursor: pointer; color: #9a9a9a; margin-top: 10px; }
 code { user-select: all; color: #cbd5e1; }
 [hidden] { display: none !important; }
+ol.hint { margin: 6px 0 6px 18px; padding: 0; line-height: 1.5; }
+a { color: #7aa7ff; }

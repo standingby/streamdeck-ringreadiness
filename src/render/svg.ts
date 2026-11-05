@@ -129,10 +129,12 @@ export function renderMetricStrip(v: MetricView, dayText: string, recent: Series
 	const opacity = v.dim ? 0.45 : 1;
 	let body = text(12, 20, v.label.toUpperCase(), { size: 13, fill: COLORS.muted, weight: 600 });
 	body += text(188, 20, dayText, { size: 13, fill: COLORS.muted, anchor: "end" });
-	let main = text(12, 66, v.text, { size: v.text.length > 5 ? 30 : 40, weight: 700, fill: valueColor(v) });
+	// Keep the value clear of the mini chart that starts at x=124.
+	const size = v.text.length > 5 ? 24 : v.text.length > 3 ? 30 : 40;
+	let main = text(12, 66, v.text, { size, weight: 700, fill: valueColor(v) });
 	const sub = [v.unit, v.trend ? ARROWS[v.trend] : ""].filter(Boolean).join(" ");
 	if (sub) main += text(12, 82, sub, { size: 12, fill: COLORS.muted });
-	if (recent) main += bars(recent, v.metric, { x: 120, y: 32, w: 68, h: 44 }, recent.length - 1);
+	if (recent) main += bars(recent, v.metric, { x: 124, y: 32, w: 64, h: 44 }, recent.length - 1);
 	body += `<g opacity="${opacity}">${main}</g>`;
 	body += footer(v, 95, 200, 12, 12);
 	return svg(200, 100, body);
@@ -185,7 +187,7 @@ export function renderSummaryKey(s: SummaryModel): string {
 		body += `</g>`;
 		body += text(cx, 100, letters[i]!, { size: 13, fill: COLORS.muted, weight: 600, anchor: "middle" });
 	});
-	body += text(72, 24, s.dayText === "Today" ? "OURA" : s.dayText, { size: 14, fill: COLORS.muted, weight: 600, anchor: "middle" });
+	body += text(72, 24, s.dayText.toUpperCase(), { size: 14, fill: COLORS.muted, weight: 600, anchor: "middle" });
 	body += footer({ badge: s.readiness.badge, age: s.readiness.age }, 136, 144, 13, 10);
 	return svg(144, 144, body);
 }
@@ -210,6 +212,6 @@ export function renderConnect(w: number, h: number): string {
 	const cx = w / 2;
 	const cy = h / 2;
 	let body = ring(cx, cy - 10, Math.min(w, h) * 0.16, 5, 1, COLORS.muted);
-	body += text(cx, cy + Math.min(w, h) * 0.3, "Connect Oura", { size: h > 120 ? 16 : 14, weight: 600, anchor: "middle" });
+	body += text(cx, cy + Math.min(w, h) * 0.3, "Connect", { size: h > 120 ? 18 : 15, weight: 600, anchor: "middle" });
 	return svg(w, h, body);
 }

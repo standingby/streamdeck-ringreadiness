@@ -40,6 +40,7 @@ describe("OuraClient", () => {
 		const seen: string[] = [];
 		const fetchFn = (async (_url: URL, init: RequestInit) => {
 			const auth = (init.headers as Record<string, string>).Authorization!;
+			expect((init.headers as Record<string, string>)["User-Agent"]).toContain("RingReadiness/");
 			seen.push(auth);
 			return auth === "Bearer t1" ? json({}, 401) : json({ data: [{ bpm: 60, source: "awake", timestamp: "2026-11-05T09:00:00Z" }] });
 		}) as unknown as typeof fetch;

@@ -1,19 +1,23 @@
 # Design
 
-Personal Stream Deck+ plugin for Oura Ring data. Installed with `streamdeck link`, not published.
-Garmin is out of scope for now; only the metric value model is provider-agnostic.
+Ring Readiness (`kz.standingby.ringreadiness`): a free, open-source Stream Deck plugin for Oura Ring
+data, Windows only. The name avoids the Oura mark (Oura API Agreement §6(e)). Publishing constraints
+are in [research/marketplace.md](research/marketplace.md).
 
 ## Auth
 
-- OAuth2 is primary, a Personal Access Token (PAT) is the fallback. Register your own app in the
-  Oura developer portal with redirect URI `http://localhost:51789/callback`.
-- Scopes: `daily heartrate personal`.
-- Everything lives in `%LOCALAPPDATA%\streamdeck-oura\auth.json`, unencrypted: OAuth tokens,
-  client id and secret, PAT. Writes are atomic (temp file + rename).
+- OAuth2 only. Oura retired personal access tokens in December 2025. Each user registers their own
+  Oura API app (redirect URI `http://localhost:51789/callback`) and enters its client ID and
+  secret: Oura requires the secret for every token exchange and forbids sharing it, and a shared
+  app would be capped at 10 users.
+- Scopes: `daily heartrate personal`. Every request sends a `User-Agent`.
+- Everything lives in `%LOCALAPPDATA%\ringreadiness\auth.json`, unencrypted. Pre-release files in
+  `%LOCALAPPDATA%\streamdeck-oura` are copied over once.
 - Oura refresh tokens are single use: refreshes are single-flight and the new pair is saved
   before it is used.
-- Login: the Connect button in any action's property inspector. A callback server runs on
-  loopback only during login (5 min timeout, `state` checked).
+- Login: the Connect button in any action's property inspector, with a step-by-step guide for
+  creating the Oura app. A callback server runs on loopback only during login.
+- Disconnect deletes the tokens and the whole data cache (Oura requires deletion on request).
 - Not connected: keys show "Connect"; pressing starts login.
 
 ## Metrics
@@ -33,13 +37,13 @@ Days are local calendar days as Oura assigns them.
 
 ## Actions
 
-- **Oura Metric** (key + dial): metric chosen in settings or by pressing. Press (key, dial push,
+- **Ring Metric** (key + dial): metric chosen in settings or by pressing. Press (key, dial push,
   touch tap) cycles to the next metric in fixed order; hold (≥ 0.6 s) refreshes, and on the dial
   also returns to today. Rotate browses days (up to 30 back). Nothing opens the Oura website.
-- **Trend chart** (key + dial): bars in metric colours. Key shows 7 days. Press cycles the daily
+- **Trend Chart** (key + dial): bars in metric colours. Key shows 7 days. Press cycles the daily
   metrics (no heart rate). Dial: hold push toggles 7 / 30 days, rotate moves the highlighted day;
   hold on a key or the touch strip refreshes.
-- **Day summary** (key + dial): dial shows Readiness / Sleep / Activity large with steps and data
+- **Day Summary** (key + dial): dial shows Readiness / Sleep / Activity large with steps and data
   age; key shows three coloured rings.
 
 ## Loading

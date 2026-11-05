@@ -2,14 +2,42 @@ import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-/** Folder for auth and cache files: %LOCALAPPDATA%\streamdeck-oura on Windows. */
-export function dataDir(): string {
-	const base =
+function baseDir(): string {
+	return (
 		process.env.LOCALAPPDATA ??
 		(process.platform === "darwin"
 			? path.join(os.homedir(), "Library", "Application Support")
-			: path.join(os.homedir(), ".local", "share"));
-	return path.join(base, "streamdeck-oura");
+			: path.join(os.homedir(), ".local", "share"))
+	);
+}
+
+/** Folder for auth and cache files: %LOCALAPPDATA%\ringreadiness on Windows. */
+export function dataDir(): string {
+	return path.join(baseDir(), "ringreadiness");
+}
+
+/**
+ * Pre-release builds kept their files in %LOCALAPPDATA%\streamdeck-oura. Copy them once into the
+ * new folder so an existing login survives the rename; the old folder is left untouched.
+ */
+export async function migrateLegacyDataDir(target: string = dataDir(), legacy: string = path.join(baseDir(), "streamdeck-oura")): Promise<boolean> {
+	try {
+		await fs.access(path.join(target, "auth.json"));
+		return false;
+	} catch {
+		// No auth in the new folder yet: fall through.
+	}
+	let copied = false;
+	for (const name of ["auth.json", "cache.json"]) {
+		try {
+			await fs.mkdir(target, { recursive: true });
+			await fs.copyFile(path.join(legacy, name), path.join(target, name));
+			copied = true;
+		} catch (err) {
+			if ((err as NodeJS.ErrnoException).code !== "ENOENT") throw err;
+		}
+	}
+	return copied;
 }
 
 export async function readJson<T>(file: string): Promise<T | undefined> {

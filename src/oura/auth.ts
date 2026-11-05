@@ -1,6 +1,7 @@
 import path from "node:path";
 
 import { dataDir, readJson, writeJsonAtomic } from "../util/files";
+import { USER_AGENT } from "../version";
 import { OuraError } from "./errors";
 
 export const TOKEN_URL = "https://api.ouraring.com/oauth/token";
@@ -16,23 +17,19 @@ export interface AuthData {
 	refreshToken?: string;
 	/** Epoch ms when the access token expires. */
 	expiresAt?: number;
-	pat?: string;
 }
 
-export type AuthMethod = "oauth" | "pat" | "none";
+export type AuthMethod = "oauth" | "none";
 
 /** What the property inspector may see: no secrets, only whether they exist. */
 export interface AuthStatus {
 	method: AuthMethod;
 	clientId: string;
 	hasClientSecret: boolean;
-	hasPat: boolean;
 }
 
 export function authMethod(data: AuthData): AuthMethod {
-	if (data.refreshToken || data.accessToken) return "oauth";
-	if (data.pat) return "pat";
-	return "none";
+	return data.refreshToken || data.accessToken ? "oauth" : "none";
 }
 
 /** auth.json on disk. All writes go through `update` so they are serialised and atomic. */
@@ -41,10 +38,15 @@ export class AuthStore {
 	private loaded = false;
 	private queue: Promise<unknown> = Promise.resolve();
 
-	constructor(readonly file: string = path.join(dataDir(), "auth.json")) {}
+	constructor(
+		readonly file: string = path.join(dataDir(), "auth.json"),
+		/** Awaited before the first read, e.g. a one-time data folder migration. */
+		private readonly ready: Promise<unknown> = Promise.resolve(),
+	) {}
 
 	async get(): Promise<AuthData> {
 		if (!this.loaded) {
+			await this.ready;
 			this.data = (await readJson<AuthData>(this.file)) ?? {};
 			this.loaded = true;
 		}
@@ -71,7 +73,6 @@ export class AuthStore {
 			method: authMethod(d),
 			clientId: d.clientId ?? "",
 			hasClientSecret: !!d.clientSecret,
-			hasPat: !!d.pat,
 		};
 	}
 }
@@ -85,8 +86,8 @@ interface TokenResponse {
 export type FetchFn = typeof fetch;
 
 /**
- * Hands out a valid bearer token. OAuth is preferred; the PAT is used only when no OAuth tokens
- * exist. Refreshes are single-flight because Oura refresh tokens work once: two parallel
+ * Hands out a valid OAuth bearer token (Oura retired personal access tokens in December 2025).
+ * Refreshes are single-flight because Oura refresh tokens work once: two parallel
  * refreshes would burn the token and force a new login.
  */
 export class TokenProvider {
@@ -100,9 +101,7 @@ export class TokenProvider {
 
 	async getToken(): Promise<string> {
 		const d = await this.store.get();
-		const method = authMethod(d);
-		if (method === "pat") return d.pat!;
-		if (method === "none") throw new OuraError("Not connected to Oura", "connect");
+		if (authMethod(d) === "none") throw new OuraError("Not connected to Oura", "connect");
 		if (d.accessToken && (d.expiresAt === undefined || d.expiresAt - 60_000 > this.now())) {
 			return d.accessToken;
 		}
@@ -120,7 +119,6 @@ export class TokenProvider {
 	private async doRefresh(): Promise<string> {
 		const d = await this.store.get();
 		if (!d.refreshToken) {
-			if (d.pat) return d.pat;
 			throw new OuraError("No refresh token; reconnect Oura", "reauth");
 		}
 		if (!d.clientId || !d.clientSecret) {
@@ -164,7 +162,7 @@ async function postToken(fetchFn: FetchFn, body: Record<string, string>): Promis
 	try {
 		res = await fetchFn(TOKEN_URL, {
 			method: "POST",
-			headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" },
+			headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json", "User-Agent": USER_AGENT },
 			body: new URLSearchParams(body).toString(),
 			signal: AbortSignal.timeout(20_000),
 		});

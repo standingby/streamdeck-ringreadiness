@@ -1,17 +1,19 @@
 {
-  "name": "streamdeck-oura",
+  "name": "ringreadiness",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "description": "Personal Stream Deck+ plugin showing Oura Ring metrics",
   "type": "module",
   "scripts": {
     "build": "rollup -c",
-    "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart com.rotte.oura\"",
+    "watch": "rollup -c -w --watch.onEnd=\"streamdeck restart kz.standingby.ringreadiness\"",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "validate": "streamdeck validate com.rotte.oura.sdPlugin",
-    "link": "streamdeck link com.rotte.oura.sdPlugin",
-    "restart": "streamdeck restart com.rotte.oura"
+    "validate": "streamdeck validate kz.standingby.ringreadiness.sdPlugin",
+    "link": "streamdeck link kz.standingby.ringreadiness.sdPlugin",
+    "restart": "streamdeck restart kz.standingby.ringreadiness",
+    "assets": "vitest run --root scripts/marketplace && node scripts/marketplace/shoot.mjs"
   },
   "dependencies": {
     "@elgato/streamdeck": "2.1.2"

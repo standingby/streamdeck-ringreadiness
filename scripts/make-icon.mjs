@@ -39,7 +39,7 @@ function ringPng(size) {
 		chunk("IHDR", ihdr), chunk("IDAT", deflateSync(raw)), chunk("IEND", Buffer.alloc(0)),
 	]);
 }
-const dir = "com.rotte.oura.sdPlugin/imgs/plugin";
+const dir = "kz.standingby.ringreadiness.sdPlugin/imgs/plugin";
 writeFileSync(`${dir}/icon.png`, ringPng(256));
 writeFileSync(`${dir}/icon@2x.png`, ringPng(512));
 console.log("icons written");

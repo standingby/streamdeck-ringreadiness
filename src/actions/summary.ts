@@ -8,7 +8,7 @@ import { metricSettings, OuraAction, type View } from "./base";
 
 export type SummarySettings = { stepGoal?: number };
 
-@action({ UUID: "com.rotte.oura.summary" })
+@action({ UUID: "kz.standingby.ringreadiness.summary" })
 export class SummaryAction extends OuraAction<SummarySettings> {
 	protected needsHr(): boolean {
 		return false;

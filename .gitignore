@@ -1,6 +1,7 @@
 node_modules/
-com.rotte.oura.sdPlugin/bin/
-com.rotte.oura.sdPlugin/logs/
+kz.standingby.ringreadiness.sdPlugin/bin/
+kz.standingby.ringreadiness.sdPlugin/logs/
 *.streamDeckPlugin
 auth.json
 .env
+dist/
