@@ -7,9 +7,13 @@ Not published on the Marketplace. See [docs/design.md](docs/design.md) for the f
 
 | Action | Key | Dial |
 | --- | --- | --- |
-| **Oura Metric** | One metric (Readiness, Sleep, Activity, Steps, Stress, HRV, Resting HR, latest heart rate). Press: refresh. Hold: open Oura. | Rotate: browse up to 30 days back. Push: today + refresh. Hold: open Oura. |
-| **Trend chart** | Last 7 days as bars. | Push: toggle 7 / 30 days. Rotate: select a day. Tap: refresh. |
-| **Day summary** | Readiness / Sleep / Activity rings. | The three scores large, steps and data age. Rotate: browse days. |
+| **Oura Metric** | One metric (Readiness, Sleep, Activity, Steps, Stress, HRV, Resting HR, latest heart rate). Press: next metric. Hold: refresh. | Rotate: browse up to 30 days back. Push or tap: next metric. Hold push: today + refresh. Hold tap: refresh. |
+| **Trend chart** | Last 7 days as bars. Press: next metric. Hold: refresh. | Rotate: select a day. Push or tap: next metric. Hold push: toggle 7 / 30 days. Hold tap: refresh. |
+| **Day summary** | Readiness / Sleep / Activity rings. Press: refresh. | The three scores large, steps and data age. Rotate: browse days. Push: today + refresh. |
+
+The metric cycle is Readiness → Sleep → Activity → Steps → Stress → HRV → Resting HR → Heart rate
+(charts skip heart rate). A hold is 0.6 s or longer. The chosen metric is saved in the action's
+settings, so it survives a restart.
 
 Colours follow Oura's bands for scores (85+ optimal, 70–84 good, below 70 pay attention), steps use
 your step goal, stress uses Oura's own day summary. HRV and resting HR show a trend arrow against

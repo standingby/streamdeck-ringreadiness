@@ -5,8 +5,6 @@ import { AuthStore, REDIRECT_URI, TokenProvider } from "./oura/auth";
 import { OuraClient } from "./oura/client";
 import { waitForCode } from "./oura/login";
 
-export const OURA_WEB_URL = "https://cloud.ouraring.com/";
-
 const log = streamDeck.logger.createScope("oura");
 
 export const auth = new AuthStore();
@@ -110,5 +108,5 @@ function onAuthChanged(): void {
 	for (const fn of authListeners) fn();
 }
 
-/** Press-and-hold threshold for "open Oura on the web". */
+/** Press-and-hold threshold: shorter is a press (next metric), longer is a hold (refresh). */
 export const LONG_PRESS_MS = 600;

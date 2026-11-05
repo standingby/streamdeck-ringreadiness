@@ -1,10 +1,10 @@
 import { action } from "@elgato/streamdeck";
 
 import { store } from "../app";
-import { formatValue, isMetric, METRIC_LABELS, type MetricId, metricView, series } from "../data/metrics";
+import { DAILY_METRICS, formatValue, isMetric, METRIC_LABELS, type MetricId, metricView, nextMetric, series } from "../data/metrics";
 import { type ChartModel, renderChartKey, renderChartStrip } from "../render/svg";
 import { dayLabel, todayLocal } from "../util/dates";
-import { metricSettings, OuraAction, type View } from "./base";
+import { metricSettings, OuraAction, type PressSource, type View } from "./base";
 
 export type ChartSettings = { metric?: MetricId; stepGoal?: number };
 
@@ -16,8 +16,17 @@ export class ChartAction extends OuraAction<ChartSettings> {
 		return false;
 	}
 
-	/** Dial push toggles 7 / 30 days. */
-	protected override onDialPress(view: View<ChartSettings>): void {
+	/** Press cycles through the daily metrics (no live heart rate on a chart). */
+	protected override onPress(view: View<ChartSettings>, _source: PressSource): void {
+		this.updateSettings(view, { ...view.settings, metric: nextMetric(metricOf(view.settings), DAILY_METRICS) });
+	}
+
+	/** Holding the dial toggles 7 / 30 days; holding a key or the touch strip refreshes. */
+	protected override onHold(view: View<ChartSettings>, source: PressSource): void {
+		if (source !== "dial") {
+			super.onHold(view, source);
+			return;
+		}
 		view.wide = !view.wide;
 		view.offset = Math.min(view.offset, (view.wide ? 30 : 7) - 1);
 		this.draw(view);

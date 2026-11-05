@@ -1,10 +1,10 @@
 import { action } from "@elgato/streamdeck";
 
 import { store } from "../app";
-import { isMetric, type MetricId, metricView, series } from "../data/metrics";
+import { isMetric, type MetricId, metricView, nextMetric, series } from "../data/metrics";
 import { renderMetricKey, renderMetricStrip } from "../render/svg";
 import { dayLabel, shiftDate, todayLocal } from "../util/dates";
-import { metricSettings, OuraAction, type View } from "./base";
+import { metricSettings, OuraAction, type PressSource, type View } from "./base";
 
 export type MetricActionSettings = { metric?: MetricId; stepGoal?: number };
 
@@ -14,6 +14,11 @@ const metricOf = (s: MetricActionSettings): MetricId => (isMetric(s.metric) ? s.
 export class MetricAction extends OuraAction<MetricActionSettings> {
 	protected needsHr(s: MetricActionSettings): boolean {
 		return metricOf(s) === "hr";
+	}
+
+	/** Press cycles through all metrics; the browsed day is kept. */
+	protected override onPress(view: View<MetricActionSettings>, _source: PressSource): void {
+		this.updateSettings(view, { ...view.settings, metric: nextMetric(metricOf(view.settings)) });
 	}
 
 	protected override onRotate(view: View<MetricActionSettings>, ticks: number): void {

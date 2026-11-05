@@ -10,63 +10,98 @@
 	"CategoryIcon": "imgs/plugin/category",
 	"CodePath": "bin/plugin.js",
 	"SDKVersion": 2,
-	"Software": { "MinimumVersion": "6.9" },
+	"Software": {
+		"MinimumVersion": "6.9"
+	},
 	"OS": [
-		{ "Platform": "windows", "MinimumVersion": "10" },
-		{ "Platform": "mac", "MinimumVersion": "12" }
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		},
+		{
+			"Platform": "mac",
+			"MinimumVersion": "12"
+		}
 	],
-	"Nodejs": { "Version": "20", "Debug": "enabled" },
+	"Nodejs": {
+		"Version": "20",
+		"Debug": "enabled"
+	},
 	"Actions": [
 		{
 			"Name": "Oura Metric",
 			"UUID": "com.rotte.oura.metric",
 			"Icon": "imgs/actions/metric",
-			"Tooltip": "One Oura metric. Dial: rotate to browse days, push for today, hold to open Oura.",
+			"Tooltip": "One Oura metric. Press: next metric. Hold: refresh. Dial: rotate to browse days.",
 			"PropertyInspectorPath": "ui/metric.html",
-			"Controllers": ["Keypad", "Encoder"],
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
 			"Encoder": {
 				"layout": "layouts/strip.json",
 				"TriggerDescription": {
 					"Rotate": "Browse days",
-					"Push": "Today and refresh (hold: open Oura)",
-					"Touch": "Refresh (hold: open Oura)"
+					"Push": "Next metric (hold: today and refresh)",
+					"Touch": "Next metric (hold: refresh)"
 				}
 			},
-			"States": [{ "Image": "imgs/actions/metric", "ShowTitle": false }]
+			"States": [
+				{
+					"Image": "imgs/actions/metric",
+					"ShowTitle": false
+				}
+			]
 		},
 		{
 			"Name": "Trend chart",
 			"UUID": "com.rotte.oura.chart",
 			"Icon": "imgs/actions/chart",
-			"Tooltip": "7 or 30 day chart of an Oura metric.",
+			"Tooltip": "7 or 30 day chart of an Oura metric. Press: next metric. Hold: refresh.",
 			"PropertyInspectorPath": "ui/chart.html",
-			"Controllers": ["Keypad", "Encoder"],
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
 			"Encoder": {
 				"layout": "layouts/strip.json",
 				"TriggerDescription": {
 					"Rotate": "Select day",
-					"Push": "Toggle 7 / 30 days (hold: open Oura)",
-					"Touch": "Refresh (hold: open Oura)"
+					"Push": "Next metric (hold: 7 / 30 days)",
+					"Touch": "Next metric (hold: refresh)"
 				}
 			},
-			"States": [{ "Image": "imgs/actions/chart", "ShowTitle": false }]
+			"States": [
+				{
+					"Image": "imgs/actions/chart",
+					"ShowTitle": false
+				}
+			]
 		},
 		{
 			"Name": "Day summary",
 			"UUID": "com.rotte.oura.summary",
 			"Icon": "imgs/actions/summary",
-			"Tooltip": "Readiness, Sleep and Activity at a glance.",
+			"Tooltip": "Readiness, Sleep and Activity at a glance. Press: today and refresh.",
 			"PropertyInspectorPath": "ui/summary.html",
-			"Controllers": ["Keypad", "Encoder"],
+			"Controllers": [
+				"Keypad",
+				"Encoder"
+			],
 			"Encoder": {
 				"layout": "layouts/strip.json",
 				"TriggerDescription": {
 					"Rotate": "Browse days",
-					"Push": "Today and refresh (hold: open Oura)",
-					"Touch": "Refresh (hold: open Oura)"
+					"Push": "Today and refresh",
+					"Touch": "Refresh"
 				}
 			},
-			"States": [{ "Image": "imgs/actions/summary", "ShowTitle": false }]
+			"States": [
+				{
+					"Image": "imgs/actions/summary",
+					"ShowTitle": false
+				}
+			]
 		}
 	]
 }

@@ -33,11 +33,12 @@ Days are local calendar days as Oura assigns them.
 
 ## Actions
 
-- **Oura Metric** (key + dial): metric chosen in settings. Dial: rotate browses days (up to 30
-  back), push returns to today and refreshes, long push opens Oura on the web. Key: press
-  refreshes, long press opens the web.
-- **Trend chart** (key + dial): bars in metric colours. Key shows 7 days. Dial shows 7 or 30 days,
-  push toggles, rotate moves the highlighted day, tap refreshes.
+- **Oura Metric** (key + dial): metric chosen in settings or by pressing. Press (key, dial push,
+  touch tap) cycles to the next metric in fixed order; hold (≥ 0.6 s) refreshes, and on the dial
+  also returns to today. Rotate browses days (up to 30 back). Nothing opens the Oura website.
+- **Trend chart** (key + dial): bars in metric colours. Key shows 7 days. Press cycles the daily
+  metrics (no heart rate). Dial: hold push toggles 7 / 30 days, rotate moves the highlighted day;
+  hold on a key or the touch strip refreshes.
 - **Day summary** (key + dial): dial shows Readiness / Sleep / Activity large with steps and data
   age; key shows three coloured rings.
 

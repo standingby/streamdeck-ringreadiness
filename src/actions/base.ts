@@ -15,11 +15,13 @@ import streamDeck, {
 } from "@elgato/streamdeck";
 import type { JsonObject, JsonValue } from "@elgato/utils";
 
-import { handlePiMessage, isConnected, LONG_PRESS_MS, onAuthChange, OURA_WEB_URL, type PiMessage, startLogin, store } from "../app";
+import { handlePiMessage, isConnected, LONG_PRESS_MS, onAuthChange, type PiMessage, startLogin, store } from "../app";
 import { DEFAULT_SETTINGS, type MetricSettings } from "../data/metrics";
 import { renderConnect, toDataUri } from "../render/svg";
 
 export const MAX_OFFSET = 30;
+
+export type PressSource = "key" | "dial" | "touch";
 
 export interface View<S extends JsonObject> {
 	action: DialAction<S> | KeyAction<S>;
@@ -43,7 +45,7 @@ export function metricSettings(s: { stepGoal?: unknown }): MetricSettings {
 
 /**
  * Shared behaviour for every Oura action: visibility tracking for the loader, redraw on data
- * change, press vs long-press, dial browsing, and the account messages from the inspector.
+ * change, press vs hold, dial browsing, and the account messages from the inspector.
  */
 export abstract class OuraAction<S extends JsonObject> extends SingletonAction<S> {
 	protected readonly views = new Map<string, View<S>>();
@@ -60,10 +62,22 @@ export abstract class OuraAction<S extends JsonObject> extends SingletonAction<S
 	protected abstract needsHr(settings: S): boolean;
 	/** Return the SVG for a key (144×144) or dial strip (200×100). */
 	protected abstract renderView(view: View<S>, isDial: boolean): string;
-	/** Dial push (short). Default: back to today and refresh. */
-	protected onDialPress(view: View<S>): void {
+	/** Short press on key, dial or touch strip. Default: back to today and refresh. */
+	protected onPress(view: View<S>, _source: PressSource): void {
 		view.offset = 0;
 		void this.refresh(view);
+	}
+	/** Press held for LONG_PRESS_MS or longer. Default: back to today and refresh. */
+	protected onHold(view: View<S>, _source: PressSource): void {
+		view.offset = 0;
+		void this.refresh(view);
+	}
+	/** Persist new settings and redraw; the loader learns whether heart rate is now visible. */
+	protected updateSettings(view: View<S>, settings: S): void {
+		view.settings = settings;
+		void view.action.setSettings(settings);
+		store.setVisible(view.action.id, this.needsHr(settings));
+		this.draw(view);
 	}
 	/** Dial rotation. Default: browse days. */
 	protected onRotate(view: View<S>, ticks: number): void {
@@ -103,9 +117,7 @@ export abstract class OuraAction<S extends JsonObject> extends SingletonAction<S
 
 	override onKeyUp(ev: KeyUpEvent<S>): void {
 		const view = this.views.get(ev.action.id);
-		if (!view) return;
-		if (this.isLongPress(view)) void streamDeck.system.openUrl(OURA_WEB_URL);
-		else void this.refresh(view);
+		if (view) this.dispatch(view, "key", this.isLongPress(view));
 	}
 
 	override onDialDown(ev: DialDownEvent<S>): void {
@@ -115,10 +127,7 @@ export abstract class OuraAction<S extends JsonObject> extends SingletonAction<S
 
 	override onDialUp(ev: DialUpEvent<S>): void {
 		const view = this.views.get(ev.action.id);
-		if (!view) return;
-		if (this.isLongPress(view)) void streamDeck.system.openUrl(OURA_WEB_URL);
-		else if (!connected) void startLogin();
-		else this.onDialPress(view);
+		if (view) this.dispatch(view, "dial", this.isLongPress(view));
 	}
 
 	override onDialRotate(ev: DialRotateEvent<S>): void {
@@ -128,9 +137,17 @@ export abstract class OuraAction<S extends JsonObject> extends SingletonAction<S
 
 	override onTouchTap(ev: TouchTapEvent<S>): void {
 		const view = this.views.get(ev.action.id);
-		if (!view) return;
-		if (ev.payload.hold) void streamDeck.system.openUrl(OURA_WEB_URL);
-		else void this.refresh(view);
+		if (view) this.dispatch(view, "touch", ev.payload.hold);
+	}
+
+	/** Every press ends here; without credentials any press starts the login instead. */
+	private dispatch(view: View<S>, source: PressSource, held: boolean): void {
+		if (!connected) {
+			void startLogin();
+			return;
+		}
+		if (held) this.onHold(view, source);
+		else this.onPress(view, source);
 	}
 
 	private isLongPress(view: View<S>): boolean {

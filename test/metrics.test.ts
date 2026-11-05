@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { bundleToDays, type DataState, metricView, series, toneFor } from "../src/data/metrics";
+import { bundleToDays, DAILY_METRICS, type DataState, metricView, nextMetric, series, toneFor } from "../src/data/metrics";
 import { shiftDate } from "../src/util/dates";
 import { syntheticBundle } from "./fixtures/bundle";
 
@@ -87,6 +87,23 @@ describe("metricView", () => {
 		expect(metricView({ days }, "hrv", TODAY, TODAY, NOW).trend).toBe("flat");
 		days[TODAY] = { hrv: 30 };
 		expect(metricView({ days }, "hrv", TODAY, TODAY, NOW).trend).toBe("down");
+	});
+});
+
+describe("nextMetric", () => {
+	it("cycles through every metric and wraps", () => {
+		const seen: string[] = ["readiness"];
+		let m = nextMetric("readiness");
+		while (m !== "readiness") {
+			seen.push(m);
+			m = nextMetric(m);
+		}
+		expect(seen).toEqual(["readiness", "sleep", "activity", "steps", "stress", "hrv", "rhr", "hr"]);
+	});
+
+	it("skips live heart rate in the daily cycle used by charts", () => {
+		expect(nextMetric("rhr", DAILY_METRICS)).toBe("readiness");
+		expect(DAILY_METRICS).not.toContain("hr");
 	});
 });
 

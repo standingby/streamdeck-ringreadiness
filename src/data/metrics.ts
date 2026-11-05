@@ -16,6 +16,15 @@ export const METRIC_LABELS: Record<MetricId, { label: string; short: string; uni
 	hr: { label: "Heart rate", short: "HR", unit: "bpm" },
 };
 
+/** Metrics that have one value per day (everything except live heart rate). */
+export const DAILY_METRICS = METRICS.filter((m) => m !== "hr");
+
+/** The metric after `current` in `order`, wrapping around; unknown values start at the first. */
+export function nextMetric(current: MetricId, order: readonly MetricId[] = METRICS): MetricId {
+	const i = order.indexOf(current);
+	return order[(i + 1) % order.length]!;
+}
+
 export function isMetric(x: unknown): x is MetricId {
 	return typeof x === "string" && (METRICS as readonly string[]).includes(x);
 }
