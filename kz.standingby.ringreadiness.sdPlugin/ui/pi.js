@@ -13,8 +13,8 @@
 		<div class="msg" id="acc-msg"></div>
 		<details id="acc-help"><summary>First time? Create your Oura API app (5 min)</summary>
 			<ol class="hint">
-				<li>Open <a href="#" data-url="https://developer.ouraring.com">developer.ouraring.com</a> and sign in with your Oura account.</li>
-				<li>Create a new application. Any name works; the website and privacy fields can point to any page you own.</li>
+				<li>Open <a href="#" data-url="https://developer.ouraring.com/applications">developer.ouraring.com/applications</a> and sign in with your Oura account.</li>
+				<li>Click <b>Create New</b>. Any name works; the website and privacy fields can point to any page you own.</li>
 				<li>Add the redirect URI <code id="acc-redirect">http://localhost:51789/callback</code> exactly.</li>
 				<li>Enable the <b>daily</b>, <b>heartrate</b> and <b>personal</b> scopes and save.</li>
 				<li>Copy the Client ID and Client Secret into the fields below, then press Connect.</li>

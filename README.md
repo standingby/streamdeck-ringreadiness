@@ -30,8 +30,8 @@ left means the last fetch failed and the dimmed value is the last one known.
 
 ## Connect your ring
 
-1. Go to [developer.ouraring.com](https://developer.ouraring.com) and sign in with your Oura account.
-2. Create a new application. Any name works; Oura asks for website, privacy policy and terms URLs,
+1. Go to [developer.ouraring.com/applications](https://developer.ouraring.com/applications) and sign in with your Oura account.
+2. Click **Create New**. Any name works; Oura asks for website, privacy policy and terms URLs,
    which can point to any page you own (for example your GitHub profile).
 3. Add the redirect URI **`http://localhost:51789/callback`** exactly as written.
 4. Enable the **daily**, **heartrate** and **personal** scopes and save.

@@ -38,7 +38,7 @@ Stream Deck stores each action's settings (chosen metric, step goal) in its own 
   reconnect; delete the folder above to remove them as well.
 - Uninstalling the plugin and deleting `%LOCALAPPDATA%\ringreadiness\` removes everything.
 - To revoke the plugin's access on Oura's side, delete or reset the secret of your Oura API
-  application at https://developer.ouraring.com.
+  application at https://developer.ouraring.com/applications.
 
 Because the publisher holds no copy of your data, there is nothing for the publisher to delete;
 the steps above remove every copy the plugin made.
