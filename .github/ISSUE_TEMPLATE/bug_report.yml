@@ -1,0 +1,60 @@
+name: Bug report
+description: Something on a key or dial is wrong, missing or broken.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. **Do not paste tokens, your client secret or your health data.**
+        Security problems go through [SECURITY.md](https://github.com/standingby/ringreadiness/blob/master/SECURITY.md) instead.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you pressed or rotated, what the key or dial showed, and what you expected.
+    validations:
+      required: true
+  - type: dropdown
+    id: action
+    attributes:
+      label: Action
+      options: [Ring Metric, Trend Chart, Day Summary, Settings / Connect, Other]
+    validations:
+      required: true
+  - type: dropdown
+    id: controller
+    attributes:
+      label: Where
+      options: [Key, Dial (Stream Deck+), Both]
+    validations:
+      required: true
+  - type: input
+    id: badge
+    attributes:
+      label: Error badge shown
+      description: OFFLINE, REAUTH, LIMIT, or none.
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: sd-version
+    attributes:
+      label: Stream Deck app version and device
+      placeholder: "7.6.1, Stream Deck+"
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: "Windows 11 24H2"
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log excerpt (optional, redacted)
+      description: From %APPDATA%\Elgato\StreamDeck\Plugins\kz.standingby.ringreadiness.sdPlugin\logs\
+      render: text
