@@ -1,0 +1,16 @@
+:root { color-scheme: dark; }
+body { margin: 0; padding: 8px 10px 16px; background: #2d2d2d; color: #d8d8d8; font: 12px "Segoe UI", system-ui, sans-serif; }
+.row { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+.row > label { flex: 0 0 92px; color: #9a9a9a; }
+.row > input, .row > select { flex: 1; min-width: 0; background: #3d3d3d; color: #e6e6e6; border: 1px solid #4a4a4a; border-radius: 3px; padding: 4px 6px; font: inherit; }
+button { background: #4a4a4a; color: #eee; border: 0; border-radius: 3px; padding: 5px 10px; font: inherit; cursor: pointer; }
+button:hover { background: #5a5a5a; }
+button.primary { background: #2f6fdd; }
+h3 { margin: 14px 0 4px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #8a8a8a; }
+.status { padding: 6px 8px; background: #383838; border-radius: 3px; }
+.status b.ok { color: #34d399; } .status b.off { color: #fb923c; }
+.msg { color: #fbbf24; min-height: 1em; }
+.hint { color: #8a8a8a; font-size: 11px; }
+details summary { cursor: pointer; color: #9a9a9a; margin-top: 10px; }
+code { user-select: all; color: #cbd5e1; }
+[hidden] { display: none !important; }

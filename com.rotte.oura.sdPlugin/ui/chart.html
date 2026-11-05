@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Trend chart</title><link rel="stylesheet" href="pi.css"></head>
+<body>
+<div class="row"><label for="metric">Metric</label><select id="metric" data-setting="metric"><option value="readiness">Readiness</option><option value="sleep">Sleep score</option><option value="activity">Activity</option><option value="steps">Steps</option><option value="stress">Daytime stress</option><option value="hrv">HRV (night)</option><option value="rhr">Resting HR (night)</option></select></div>
+<div class="row" id="goal-row"><label for="goal">Step goal</label><input id="goal" type="number" min="1000" step="500" placeholder="8000" data-setting="stepGoal"></div>
+<script>window.onSettingsShown = (s) => { document.getElementById("goal-row").hidden = (s.metric ?? "readiness") !== "steps"; };</script>
+<div id="account"></div>
+<script src="pi.js"></script>
+</body>
+</html>

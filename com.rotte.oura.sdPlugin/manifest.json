@@ -1,0 +1,72 @@
+{
+	"$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+	"Name": "Oura",
+	"Version": "0.1.0.0",
+	"Author": "rotte",
+	"Description": "Oura Ring readiness, sleep, activity, stress, HRV and heart rate on your Stream Deck.",
+	"UUID": "com.rotte.oura",
+	"Icon": "imgs/plugin/icon",
+	"Category": "Oura",
+	"CategoryIcon": "imgs/plugin/category",
+	"CodePath": "bin/plugin.js",
+	"SDKVersion": 2,
+	"Software": { "MinimumVersion": "6.9" },
+	"OS": [
+		{ "Platform": "windows", "MinimumVersion": "10" },
+		{ "Platform": "mac", "MinimumVersion": "12" }
+	],
+	"Nodejs": { "Version": "20", "Debug": "enabled" },
+	"Actions": [
+		{
+			"Name": "Oura Metric",
+			"UUID": "com.rotte.oura.metric",
+			"Icon": "imgs/actions/metric",
+			"Tooltip": "One Oura metric. Dial: rotate to browse days, push for today, hold to open Oura.",
+			"PropertyInspectorPath": "ui/metric.html",
+			"Controllers": ["Keypad", "Encoder"],
+			"Encoder": {
+				"layout": "layouts/strip.json",
+				"TriggerDescription": {
+					"Rotate": "Browse days",
+					"Push": "Today and refresh (hold: open Oura)",
+					"Touch": "Refresh (hold: open Oura)"
+				}
+			},
+			"States": [{ "Image": "imgs/actions/metric", "ShowTitle": false }]
+		},
+		{
+			"Name": "Trend chart",
+			"UUID": "com.rotte.oura.chart",
+			"Icon": "imgs/actions/chart",
+			"Tooltip": "7 or 30 day chart of an Oura metric.",
+			"PropertyInspectorPath": "ui/chart.html",
+			"Controllers": ["Keypad", "Encoder"],
+			"Encoder": {
+				"layout": "layouts/strip.json",
+				"TriggerDescription": {
+					"Rotate": "Select day",
+					"Push": "Toggle 7 / 30 days (hold: open Oura)",
+					"Touch": "Refresh (hold: open Oura)"
+				}
+			},
+			"States": [{ "Image": "imgs/actions/chart", "ShowTitle": false }]
+		},
+		{
+			"Name": "Day summary",
+			"UUID": "com.rotte.oura.summary",
+			"Icon": "imgs/actions/summary",
+			"Tooltip": "Readiness, Sleep and Activity at a glance.",
+			"PropertyInspectorPath": "ui/summary.html",
+			"Controllers": ["Keypad", "Encoder"],
+			"Encoder": {
+				"layout": "layouts/strip.json",
+				"TriggerDescription": {
+					"Rotate": "Browse days",
+					"Push": "Today and refresh (hold: open Oura)",
+					"Touch": "Refresh (hold: open Oura)"
+				}
+			},
+			"States": [{ "Image": "imgs/actions/summary", "ShowTitle": false }]
+		}
+	]
+}
