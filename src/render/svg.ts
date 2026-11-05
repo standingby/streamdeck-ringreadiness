@@ -178,9 +178,9 @@ export function renderSummaryKey(s: SummaryModel): string {
 	const letters = ["R", "S", "A"];
 	let body = "";
 	items.forEach((v, i) => {
-		const cx = 26 + i * 46;
+		const cx = 25 + i * 47;
 		body += `<g opacity="${v.dim ? 0.45 : 1}">`;
-		body += ring(cx, 62, 19, 5, v.fraction, toneColor(v.tone));
+		body += ring(cx, 62, 17, 4.5, v.fraction, toneColor(v.tone));
 		body += text(cx, 68, v.text, { size: 15, weight: 700, anchor: "middle" });
 		body += `</g>`;
 		body += text(cx, 100, letters[i]!, { size: 13, fill: COLORS.muted, weight: 600, anchor: "middle" });
